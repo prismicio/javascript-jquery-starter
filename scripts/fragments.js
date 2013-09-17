@@ -244,7 +244,7 @@
                 break;
 
             case "Number":
-                output = new Number(field.value);
+                output = new Num(field.value);
                 break;
 
             case "Date":
