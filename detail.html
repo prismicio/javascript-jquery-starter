@@ -3,31 +3,91 @@
 <html>
     <head>
         <title>JavaScript starter</title>
-        <script src="vendor/jquery-1.9.0.min.js"></script>
+        <link href="css/main.css" media="all" rel="stylesheet" type="text/css">
+        <script src="vendor/jquery-2.0.3.min.js"></script>
         <script src="scripts/fragments.js"></script>
         <script src="scripts/api.js"></script>
+        <script src="scripts/prismic-configuration.js"></script>
+        <script src="scripts/prismic-helpers.js"></script>
     </head>
-    <body>
+    <body class="loading">
 
         <header>
-            <!-- @toolbar() -->
-            <a href="@routes.Application.index(prismic.maybeRef())">
-                <h1>Your prismic.io project</h1>
-            </a>
+            <script type="text/template">
+                <a href="index.html?ref=<%= ref %>">
+                    <h1>Your prismic.io project</h1>
+                </a>
+            </script>
         </header>
 
-        <!-- @(document: io.prismic.Document) -->
-        <!-- @main(s"Document detail ${document.getSlug()}") { -->
-        <article id="@document.getId()">
-            <!-- @Html(document.asHtml(prismic.getLinkResolver())) -->
+        <article>
+            <script type="text/template">
+                <%= doc %> 
+            </script>
         </article>
-        <!-- } -->
 
         <footer>
-            <!-- @if(!prismic.hasPrivilegedAccess()) { -->
-            <hr> <a href="@routes.Prismic.signin()">Sign in to preview changes</a>
-            <!-- } -->
+            <script type="text/template">
+                <% if(!$.prismic.oauth().hasPrivilegedAccess) { %>
+                    <hr><a href="signin.html">Sign in to preview changes</a>
+                <% } %>
+            </script>
         </footer>
+
+        <!-- Logic -->
+
+        <script type="text/javascript">
+            $(function() {
+
+                // Retrieve the prismic API
+                $.prismic.api().then(
+                    function(api) {
+
+                        // Retrieve the ref from the QueryString or use the Master ref
+                        var ref = $.prismic.queryString['ref'] || api.data.master.ref;
+
+                        // Links resolver
+                        var linkResolver = $.prismic.linkResolver(api, ref);
+
+                        // Retrieve the document
+                        var id = $.prismic.queryString['id'],
+                            slug = $.prismic.queryString['slug'];
+
+                        return api.forms("everything").ref(ref).query('[[:d = at(document.id, "' + id + '")]]').submit().then(function(docs) {
+
+                            var doc = docs[0];
+
+                            // If there is no documents for this id
+                            if(!doc) {
+                                document.location = 'notfound.html';
+                            }
+
+                            // If the slug doesn't match
+                            if(doc.slug != slug) {
+                                // If this is an old valid slug, redirect
+                                if(doc.slugs.indexOf(slug) > -1) {
+                                    document.location = 'detail.html?id=' + doc.id + '&slug=' + doc.slug + '&ref=' + ref;
+                                } else {
+                                    document.location = 'notfound.html';
+                                }
+                            }
+
+                            // Feed the templates
+                            $('header, article, footer').render({
+                                doc: doc,
+                                ref: ref == api.data.master.ref ? '' : ref,
+                                linkResolver: linkResolver
+                            });
+
+                        });
+
+                    }
+                ).then(function() {
+                    $(document.body).removeClass('loading')
+                });
+
+            });
+        </script>
 
     </body>
 </html>

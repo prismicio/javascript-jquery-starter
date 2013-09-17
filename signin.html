@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>JavaScript starter</title>
+        <link href="css/main.css" media="all" rel="stylesheet" type="text/css">
+        <script src="vendor/jquery-2.0.3.min.js"></script>
+        <script src="scripts/fragments.js"></script>
+        <script src="scripts/api.js"></script>
+        <script src="scripts/prismic-configuration.js"></script>
+        <script src="scripts/prismic-helpers.js"></script>
+    </head>
+    <body class="loading">
+
+        <!-- Logic -->
+
+        <script type="text/javascript">
+            $(function() {
+
+                var maybeAccessToken = document.location.hash;
+
+                if($.prismic.encodedHash['access_token']) {
+                    sessionStorage.setItem('ACCESS_TOKEN', $.prismic.encodedHash['access_token']);
+                    document.location = 'index.html';
+                } else {
+
+                    // Retrieve the prismic API
+                    $.prismic.api(Configuration.apiEndpoint).then(
+                        function(api) {
+                            document.location =
+                                api.data.oauthInitiate + 
+                                '?response_type=token' +
+                                '&client_id=' + encodeURIComponent(Configuration['clientId']) +
+                                '&redirect_uri=' + encodeURIComponent(document.location) +
+                                '&scope=' + encodeURIComponent('master+releases');
+                        }
+                    );
+
+                }
+
+            });
+        </script>
+
+    </body>
+</html>

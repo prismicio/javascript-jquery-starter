@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>JavaScript starter</title>
+        <link href="css/main.css" media="all" rel="stylesheet" type="text/css">
+        <script src="vendor/jquery-2.0.3.min.js"></script>
+        <script src="scripts/fragments.js"></script>
+        <script src="scripts/api.js"></script>
+        <script src="scripts/prismic-configuration.js"></script>
+        <script src="scripts/prismic-helpers.js"></script>
+    </head>
+    <body class="loading">
+
+        <!-- Logic -->
+
+        <script type="text/javascript">
+            $(function() {
+
+                // Clear the session
+                sessionStorage.clear();
+                document.location = 'index.html';
+
+            });
+        </script>
+
+    </body>
+</html>

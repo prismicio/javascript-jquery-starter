@@ -72,7 +72,9 @@
                 bookmarks: data.bookmarks || [],
                 refs: refs,
                 forms: forms,
-                master: master[0]
+                master: master[0],
+                oauthInitiate: data['oauth_initiate'],
+                oauthToken: data['oauth_token']
             };
 
         },
@@ -119,7 +121,7 @@
         },
 
         query: function (query) {
-            this.data.q = "[${" + (this.form.fields.q || "") + "}${" + query + "}]";
+            this.data.q = query;
             return this;
         },
 
@@ -128,7 +130,10 @@
 
             $.getJSON(
                 this.form.action,
-                { ref: self.data.ref.ref },
+                { 
+                    ref: self.data.ref ,
+                    q: self.data.q
+                },
                 function (d) {
                     var docs = d.map(function (doc) {
                         return new Doc(
@@ -173,14 +178,11 @@
             this.href = href;
             this.tags = tags;
             this.slugs = slugs;
+            this.slug = slugs ? slugs[0] : "-"
             this.fragments = fragments;
         }
 
         Doc.prototype = {
-
-            slug: function () {
-                return this.slugs ? this.slugs[0] : "-";
-            },
 
             get: function (field) {
                 var frags = getFragments.call(this, field);

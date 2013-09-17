@@ -14,59 +14,23 @@
 
         <header>
             <script type="text/template">
-                <% if($.prismic.oauth().hasPrivilegedAccess) { %>
-                    <div id="toolbar">
-
-                        <form method="GET">
-                            <label for="releaseSelector">See this website: </label>
-                            <select id="releaseSelector" name="ref" onchange="this.form.submit()">
-                                <option value="" <% if(ref == api.data.master.ref) { %> selected="selected" <% } %> >As currently seen by guest visitors</option>
-                                <optgroup label="Or preview the website in a future release:">
-                                <% for(var i=0; i<api.data.refs.length; i++) { %>
-                                    <% if(!api.data.refs[i].isMaster) { %>
-                                        <option value="<%= api.data.refs[i].ref %>" <% if(ref == api.data.refs[i].ref) { %> selected="selected" <% } %>>As <%= api.data.refs[i].label %></option>
-                                    <% } %>
-                                <% } %>
-                                </optgroup>
-                            </select>
-                        </form>
-
-                        <form action="signout.html" method="GET">
-                            <input type="submit" value="Disconnect">
-                        </form>
-
-                        <hr>
-
-                    </div>
-                <% } %>
-
                 <a href="index.html?ref=<%= ref %>">
                     <h1>Your prismic.io project</h1>
                 </a>
             </script>
         </header>
 
-        <form action="search.html" method="GET">
-            <script type="text/template">
-                <input type="hidden" name="ref" value="<%= ref %>">
-                <input type="text" name="q" value="">
-                <input type="submit" value="Search">
-            </script>
-        </form>
-
-        <hr>
-
         <h2 id="title">
             <script type="text/template">
                 <% if(docs.length > 0) { %>
                     <%= docs.length %> documents
                 <% } else { %>
-                    No documents found
+                    No results found
                 <% } %>
             </script>
         </h2>
 
-        <ul id="list">
+        <ul id="results">
             <script type="text/template">
                 <% for(var i=0; i<docs.length; i++) { %>
                     <li>
@@ -95,23 +59,23 @@
                 $.prismic.api().then(
                     function(api) {
 
-                        console.log(api)
-
                         // Retrieve the ref from the QueryString or use the Master ref
-                        var ref = $.prismic.queryString['ref'] || api.data.master.ref;
+                        var ref = $.prismic.queryString['ref'] || api.data.master.ref
 
                         // Links resolver
                         var linkResolver = $.prismic.linkResolver(api, ref);
 
-                        // Query All documents
-                        return api.forms("everything").ref(ref).submit().then(function(docs) {
+                        // Retrieve the query
+                        var q = $.prismic.queryString['q'];
+
+                        // Full-text search
+                        return api.forms("everything").ref(ref).query('[[:d = fulltext(document, "' + q + '")]]').submit().then(function(docs) {
 
                             // Feed the templates
-                            $('header, form, #title, #list, footer').render({
-                                docs: docs, 
+                            $('header, #results, footer').render({
                                 ref: ref == api.data.master.ref ? '' : ref,
-                                linkResolver: linkResolver,
-                                api: api
+                                docs: docs,
+                                linkResolver: linkResolver
                             });
 
                         });
