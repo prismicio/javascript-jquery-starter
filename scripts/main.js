@@ -7,34 +7,34 @@
 
     api.get(function () {
 
-        var productForm = api.forms("products");
+        var someDocuments = api.forms("everything");
 
-        if (productForm) {
-            productForm
+        if (someDocuments) {
+            someDocuments
                 .ref(api.data.master)
-                .submit(displayProducts);
+                .submit(displayDocuments);
         }
     });
 
-    function displayProducts(products) {
+    function displayDocuments(documents) {
 
-        products.forEach(function (product) {
+        documents.forEach(function (document) {
 
-            var imgs = product.getAllImageViews("image", "main").map(function (img) {
+            var imgs = document.getAllImageViews("image", "main").map(function (img) {
                 return img.asHtml()
             }).join();
 
-            var desc = product.get("description");
+            var desc = document.get("description");
 
-            var col = product.get("color"),
-                flavours = product.getAll("flavour").map(function (fl) {
+            var col = document.get("color"),
+                flavours = document.getAll("flavour").map(function (fl) {
                     return fl.value;
                 }),
                 fontCol = col ? col.value : "#000";
 
             $("<div />")
                 .css("color", fontCol)
-                .text(product.slugs[0] + " - " + flavours)
+                .text(document.slugs[0] + " - " + flavours)
                 .appendTo("body");
 
         });
