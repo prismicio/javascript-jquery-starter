@@ -2,8 +2,10 @@
 
     "use strict";
 
-    var prismic = function(url) {
-        return new prismic.fn.init(url);
+    var prismic = function(url, onReady) {
+        var api = new prismic.fn.init(url);
+        onReady && api.get(onReady);
+        return api;
     };
 
     prismic.fn = prismic.prototype = {
@@ -20,7 +22,7 @@
                 success: function (data) {
                     self.data = self.parse(data);
                     if (cb) {
-                        cb(this);
+                        cb(self, this);
                     }
                 }
             });
@@ -111,8 +113,24 @@
     function SearchForm(api, form, data) {
         this.api = api;
         this.form = form;
-        this.data = data;
-    }
+        this.data = data || {};
+
+        if (form.fields && form.fields.q) {
+            for (var f in form.fields) {
+                var val = this.data[f];
+                if (!val) {
+                    this.data[f] = [];
+                }
+                // FIXME: only handle value "default"?
+                if (f === "q") {
+                    this.query(form.fields[f].default);
+                } else {
+                    this.data[f].push(form.fields[f].default);
+                }
+            }
+        }
+
+    };
     SearchForm.prototype = {
 
         ref: function (ref) {
@@ -121,19 +139,37 @@
         },
 
         query: function (query) {
-            this.data.q = query;
+
+            function strip(q) {
+                if(q == null) return "";
+                if(q.indexOf("[") === 0 && q.lastIndexOf("]") === q.length - 1) {
+                    return q.substring(1, q.length - 1);
+                }
+                return q;
+            }
+            this.data.q = this.data.q || [];
+            this.data.q.push(strip(query));
+
             return this;
         },
 
         submit: function (cb) {
             var self = this;
 
+            var q = "[" + this.data.q.join("") + "]",
+                ref = this.data.ref,
+                params = {
+                    ref: ref
+                };
+            if (this.data.q.length === 1 && this.data.q[0] === "") {
+
+            } else {
+                params.q = q;
+            }
+
             $.getJSON(
                 this.form.action,
-                { 
-                    ref: self.data.ref ,
-                    q: self.data.q
-                },
+                params,
                 function (d) {
                     var docs = d.map(function (doc) {
                         return new Doc(
@@ -142,9 +178,7 @@
                             doc.href,
                             doc.tags,
                             doc.slugs,
-
-                            // Fixme: could be anything.
-                            doc.data.product
+                            doc.data[doc.type]
                         )
                     });
 
@@ -173,12 +207,12 @@
         };
 
         function Doc(id, type, href, tags, slugs, fragments) {
+
             this.id = id;
             this.type = type;
             this.href = href;
             this.tags = tags;
-            this.slugs = slugs;
-            this.slug = slugs ? slugs[0] : "-"
+            this.slug = slugs ? slugs[0] : "-";
             this.fragments = fragments;
         }
 
@@ -237,6 +271,15 @@
                     return image.getView(view);
                 });
 
+            },
+
+            asHtml: function(linkResolver) {
+                var htmls = [];
+                for(var field in this.fragments) {
+                    var fragment = this.get(field)
+                    htmls.push(fragment && fragment.asHtml ? '<section data-field="' + field + '">' + fragment.asHtml(linkResolver) + '</section>' : '')
+                }
+                return htmls.join('')
             }
 
         };

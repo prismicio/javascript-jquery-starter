@@ -95,8 +95,6 @@
                 $.prismic.api().then(
                     function(api) {
 
-                        console.log(api)
-
                         // Retrieve the ref from the QueryString or use the Master ref
                         var ref = $.prismic.queryString['ref'] || api.data.master.ref;
 
