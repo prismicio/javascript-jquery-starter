@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>JavaScript starter</title>
+        <script src="javascripts/jquery-1.9.0.min.js"></script>
+    </head>
+    <body>
+
+        <header>
+            <!-- @toolbar() -->
+            <a href="@routes.Application.index(prismic.maybeRef())">
+                <h1>Your prismic.io project</h1>
+            </a>
+        </header>
+
+        <!-- @(someDocuments: java.util.List[io.prismic.Document]) -->
+        <form action="@routes.Application.search(null, prismic.maybeRef())" method="GET">
+          <input type="text" name="q" value="">
+          <input type="submit" value="Search">
+        </form>
+
+        <hr>
+
+        <h2>
+            No documents found
+            <!--
+            @someDocuments.size() match {
+                case 0 => { No documents found }
+                case 1 => { One document found }
+                case n => { @n documents found }
+            }
+            -->
+        </h2>
+
+        <ul>
+            <!-- @for(document <- someDocuments) { -->
+            <li>
+                <a href="@routes.Application.detail(document.getId(), document.getSlug(), prismic.maybeRef())">
+                    @document.getSlug()
+                </a>
+            </li>
+            <!-- } -->
+        </ul>
+
+        <footer>
+          <!-- @if(!prismic.hasPrivilegedAccess()) { -->
+            <hr><a href="@routes.Prismic.signin()">Sign in to preview changes</a>
+          <!-- } -->
+        </footer>
+
+    </body>
+</html>
