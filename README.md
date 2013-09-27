@@ -1,4 +1,4 @@
-## Starter project for client side app aith JQuery
+## Starter project for client side app with JQuery
 
 This is a purely client side application that will connect to any [prismic.io](https://prismic.io) repository. It uses the prismic.io JavaScript developement kit, and provide a few helpers to integrate with JQuery and a templating engine.
 
