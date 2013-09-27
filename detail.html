@@ -2,18 +2,18 @@
 
 <html>
     <head>
-        <title>JavaScript starter</title>
-        <link href="css/main.css" media="all" rel="stylesheet" type="text/css">
-        <script src="vendor/jquery-2.0.3.min.js"></script>
-        <script src="vendor/prismic.io-1.0.0.min.js"></script>
-        <script src="scripts/prismic-configuration.js"></script>
-        <script src="scripts/prismic-helpers.js"></script>
+        <title>Your prismic.io project</title>
+        <script src="js/vendor/jquery-2.0.3.min.js"></script>
+        <script src="js/vendor/prismic.io-1.0.0.min.js"></script>
+        <script src="js/prismic-configuration.js"></script>
+        <script src="js/prismic-helpers.js"></script>
+        <script src="js/prismic-templates.js"></script>
     </head>
     <body class="loading">
 
         <header>
             <script type="text/template">
-                <a href="index.html?ref=<%= ref %>">
+                <a href="index.html?<%= ctx.maybeRefParam %>">
                     <h1>Your prismic.io project</h1>
                 </a>
             </script>
@@ -21,13 +21,13 @@
 
         <article>
             <script type="text/template">
-                <%= doc.asHtml(linkResolver) %> 
+                <%= doc.asHtml(ctx.linkResolver) %> 
             </script>
         </article>
 
         <footer>
             <script type="text/template">
-                <% if(!$.prismic.oauth().hasPrivilegedAccess) { %>
+                <% if(!ctx.oauth().hasPrivilegedAccess) { %>
                     <hr><a href="signin.html">Sign in to preview changes</a>
                 <% } %>
             </script>
@@ -38,51 +38,39 @@
         <script type="text/javascript">
             $(function() {
 
-                // Retrieve the prismic API
-                $.prismic.api().then(
-                    function(api) {
+                Helpers.withPrismic(function(ctx) {
 
-                        // Retrieve the ref from the QueryString or use the Master ref
-                        var ref = $.prismic.queryString['ref'] || api.data.master.ref;
+                    // Retrieve the document
+                    var id = Helpers.queryString['id'],
+                        slug = Helpers.queryString['slug'];
 
-                        // Links resolver
-                        var linkResolver = $.prismic.linkResolver(api, ref);
+                    ctx.api.forms("everything").ref(ctx.ref).query('[[:d = at(document.id, "' + id + '")]]').submit(function(docs) {
 
-                        // Retrieve the document
-                        var id = $.prismic.queryString['id'],
-                            slug = $.prismic.queryString['slug'];
+                        var doc = docs[0];
 
-                        return api.forms("everything").ref(ref).query('[[:d = at(document.id, "' + id + '")]]').submit().then(function(docs) {
+                        // If there is no documents for this id
+                        if(!doc) {
+                            document.location = 'notfound.html';
+                        }
 
-                            var doc = docs[0];
-
-                            // If there is no documents for this id
-                            if(!doc) {
+                        // If the slug doesn't match
+                        if(doc.slug != slug) {
+                            // If this is an old valid slug, redirect
+                            if(doc.slugs.indexOf(slug) > -1) {
+                                document.location = 'detail.html?id=' + doc.id + '&slug=' + doc.slug + '&ref=' + ref;
+                            } else {
                                 document.location = 'notfound.html';
                             }
+                        }
 
-                            // If the slug doesn't match
-                            if(doc.slug != slug) {
-                                // If this is an old valid slug, redirect
-                                if(doc.slugs.indexOf(slug) > -1) {
-                                    document.location = 'detail.html?id=' + doc.id + '&slug=' + doc.slug + '&ref=' + ref;
-                                } else {
-                                    document.location = 'notfound.html';
-                                }
-                            }
-
-                            // Feed the templates
-                            $('header, article, footer').render({
-                                doc: doc,
-                                ref: ref == api.data.master.ref ? '' : ref,
-                                linkResolver: linkResolver
-                            });
-
+                        // Feed the templates
+                        $('header, article, footer').render({
+                            doc: doc,
+                            ctx: ctx
                         });
 
-                    }
-                ).then(function() {
-                    $(document.body).removeClass('loading')
+                    });
+
                 });
 
             });

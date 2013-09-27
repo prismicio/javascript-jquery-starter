@@ -2,28 +2,28 @@
 
 <html>
     <head>
-        <title>JavaScript starter</title>
-        <link href="css/main.css" media="all" rel="stylesheet" type="text/css">
-        <script src="vendor/jquery-2.0.3.min.js"></script>
-        <script src="vendor/prismic.io-1.0.0.min.js"></script>
-        <script src="scripts/prismic-configuration.js"></script>
-        <script src="scripts/prismic-helpers.js"></script>
+        <title>Your prismic.io project</title>
+        <script src="js/vendor/jquery-2.0.3.min.js"></script>
+        <script src="js/vendor/prismic.io-1.0.0.min.js"></script>
+        <script src="js/prismic-configuration.js"></script>
+        <script src="js/prismic-helpers.js"></script>
+        <script src="js/prismic-templates.js"></script>
     </head>
-    <body class="loading">
+    <body>
 
         <header>
             <script type="text/template">
-                <% if($.prismic.oauth().hasPrivilegedAccess) { %>
+                <% if(ctx.oauth().hasPrivilegedAccess) { %>
                     <div id="toolbar">
 
                         <form method="GET">
                             <label for="releaseSelector">See this website: </label>
                             <select id="releaseSelector" name="ref" onchange="this.form.submit()">
-                                <option value="" <% if(ref == api.data.master.ref) { %> selected="selected" <% } %> >As currently seen by guest visitors</option>
+                                <option value="" <% if(ctx.ref == ctx.api.data.master.ref) { %> selected="selected" <% } %> >As currently seen by guest visitors</option>
                                 <optgroup label="Or preview the website in a future release:">
-                                <% for(var i=0; i<api.data.refs.length; i++) { %>
-                                    <% if(!api.data.refs[i].isMaster) { %>
-                                        <option value="<%= api.data.refs[i].ref %>" <% if(ref == api.data.refs[i].ref) { %> selected="selected" <% } %>>As <%= api.data.refs[i].label %></option>
+                                <% for(var i=0; i<ctx.api.data.refs.length; i++) { %>
+                                    <% if(!ctx.api.data.refs[i].isMaster) { %>
+                                        <option value="<%= ctx.api.data.refs[i].ref %>" <% if(ctx.ref == ctx.api.data.refs[i].ref) { %> selected="selected" <% } %>>As <%= ctx.api.data.refs[i].label %></option>
                                     <% } %>
                                 <% } %>
                                 </optgroup>
@@ -39,7 +39,7 @@
                     </div>
                 <% } %>
 
-                <a href="index.html?ref=<%= ref %>">
+                <a href="index.html?<%= ctx.maybeRefParam %>">
                     <h1>Your prismic.io project</h1>
                 </a>
             </script>
@@ -47,7 +47,7 @@
 
         <form action="search.html" method="GET">
             <script type="text/template">
-                <input type="hidden" name="ref" value="<%= ref %>">
+                <input type="hidden" name="ref" value="<%= ctx.maybeRef %>">
                 <input type="text" name="q" value="">
                 <input type="submit" value="Search">
             </script>
@@ -69,7 +69,7 @@
             <script type="text/template">
                 <% for(var i=0; i<docs.length; i++) { %>
                     <li>
-                        <a href="detail.html?id=<%= docs[i].id %>&slug=<%= docs[i].slug %>&ref=<%= ref %>">
+                        <a href="detail.html?id=<%= docs[i].id %>&slug=<%= docs[i].slug %><%= ctx.maybeRefParam %>">
                             <%= docs[i].slug %>
                         </a>
                     </li>
@@ -79,7 +79,7 @@
 
         <footer>
             <script type="text/template">
-                <% if(!$.prismic.oauth().hasPrivilegedAccess) { %>
+                <% if(!ctx.oauth().hasPrivilegedAccess) { %>
                     <hr><a href="signin.html">Sign in to preview changes</a>
                 <% } %>
             </script>
@@ -90,32 +90,18 @@
         <script type="text/javascript">
             $(function() {
 
-                // Retrieve the prismic API
-                $.prismic.api().then(
-                    function(api) {
+                Helpers.withPrismic(function(ctx) {
 
-                        // Retrieve the ref from the QueryString or use the Master ref
-                        var ref = $.prismic.queryString['ref'] || api.data.master.ref;
+                    ctx.api.forms("everything").ref(ctx.ref).submit(function(docs) {
 
-                        // Links resolver
-                        var linkResolver = $.prismic.linkResolver(api, ref);
-
-                        // Query All documents
-                        return api.forms("everything").ref(ref).submit().then(function(docs) {
-
-                            // Feed the templates
-                            $('header, form, #title, #list, footer').render({
-                                docs: docs, 
-                                ref: ref == api.data.master.ref ? '' : ref,
-                                linkResolver: linkResolver,
-                                api: api
-                            });
-
+                        // Feed the templates
+                        $('header, form, #title, #list, footer').render({
+                            docs: docs, 
+                            ctx: ctx
                         });
 
-                    }
-                ).then(function() {
-                    $(document.body).removeClass('loading')
+                    });
+
                 });
 
             });
