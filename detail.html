@@ -44,7 +44,7 @@
                     var id = Helpers.queryString['id'],
                         slug = Helpers.queryString['slug'];
 
-                    ctx.api.forms("everything").ref(ctx.ref).query('[[:d = at(document.id, "' + id + '")]]').submit(function(docs) {
+                    ctx.api.form("everything").ref(ctx.ref).query('[[:d = at(document.id, "' + id + '")]]').submit(function(docs) {
 
                         var doc = docs[0];
 

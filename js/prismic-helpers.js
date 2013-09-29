@@ -19,8 +19,7 @@
     global.Helpers = {
 
         getApiHome: function(callback) {
-            var token = sessionStorage.getItem('ACCESS_TOKEN');
-            Prismic.Api(Configuration.apiEndpoint + (token ? '?=access_token=' + token : ''), callback);
+            Prismic.Api(Configuration.apiEndpoint, callback, sessionStorage.getItem('ACCESS_TOKEN'));
         },
 
         buildContext: function(ref, callback) {

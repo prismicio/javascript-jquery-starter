@@ -59,7 +59,7 @@
                     // Retrieve the query
                     var q = Helpers.queryString['q'];
 
-                    ctx.api.forms("everything").ref(ctx.ref).query('[[:d = fulltext(document, "' + q + '")]]').submit(function(docs) {
+                    ctx.api.form("everything").ref(ctx.ref).query('[[:d = fulltext(document, "' + q + '")]]').submit(function(docs) {
 
                         // Feed the templates
                         $('header, #results, footer').render({

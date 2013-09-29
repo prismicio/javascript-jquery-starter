@@ -92,7 +92,7 @@
 
                 Helpers.withPrismic(function(ctx) {
 
-                    ctx.api.forms("everything").ref(ctx.ref).submit(function(docs) {
+                    ctx.api.form("everything").ref(ctx.ref).submit(function(docs) {
 
                         // Feed the templates
                         $('header, form, #title, #list, footer').render({
