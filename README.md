@@ -26,25 +26,9 @@ var Configuration = {
 }
 ```
 
+To get the OAuth configuration, go to the Applications panel in your repository settings, and create an OAuth application to allow interactive sign-in. Just create a new application, fill the application name and the callback URL (localhost URLs are always authorized, so at development time you can omit to fill the Callback URL field), and copy/paste the clientId & clientSecret tokens.
+
 Open the `index.html` in your browser. Alternatively you can also launch a local Web server using the `server.sh` script and open the home page at http://localhost:8000/.
-
-### Connect it to your own repository
-
-By the default, this application will consume the content from the original "Les Bonnes Choses" repository. You can also create your own fork of this content repository and use it instead.
-
-Once you have created your own "Les Bonnes Choses" repository from the prismic.io Dashboard, change the `apiEndpoint` in the `prismic-configuration.js` file:
-
-```
-  apiEndpoint: 'https://xxxxxx.prismic.io/api',
-```
-
-You can also go to the _Applications_ panel in your repository settings, and create an OAuth application to allow interactive sign-in. Just create a new application, fill the application name and the callback URL (`localhost` URLs are always authorized, so at development time you can omit to fill the Callback URL field), and copy/paste the `clientId` & `clientSecret` configuration to the `prismic-configuration.js` file:
-
-```
-  // OAuth
-  clientId: 'xxxxxx',
-  clientSecret: 'xxxxxx',
-```
 
 ### Publish your code
 
