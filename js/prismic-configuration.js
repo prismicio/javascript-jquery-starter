@@ -13,6 +13,11 @@ var Configuration = {
   // -- Links resolution rules
   linkResolver: function(ctx, doc) {
     return 'detail.html?id=' + doc.id + '&slug=' + doc.slug + ctx.maybeRefParam;
+  },
+
+  // -- To customize: what to do when an error happens on the prismic.io side
+  onPrismicError: function(err) {
+    window.location = '/error.html'+(err ? '#'+err.message : '');
   }
 
 }
