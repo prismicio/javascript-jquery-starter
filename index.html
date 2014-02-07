@@ -69,7 +69,7 @@
             <script type="text/template">
                 <% for(var i=0; i<docs.length; i++) { %>
                     <li>
-                        <a href="detail.html?id=<%= docs[i].id %>&slug=<%= docs[i].slug %><%= ctx.maybeRefParam %>">
+                        <a href="<%= ctx.linkResolver(ctx, docs[i]) %>">
                             <%= docs[i].slug %>
                         </a>
                     </li>
