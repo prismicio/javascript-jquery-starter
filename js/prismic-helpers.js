@@ -39,7 +39,7 @@
                 }
               },
 
-              linkResolver: function(doc) {
+              linkResolver: function(ctx, doc) {
                 return Configuration.linkResolver(ctx, doc);
               }
             }
