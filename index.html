@@ -4,7 +4,7 @@
     <head>
         <title>Your prismic.io project</title>
         <script src="js/vendor/jquery-2.0.3.min.js"></script>
-        <script src="js/vendor/prismic.io-1.0.7.min.js"></script>
+        <script src="js/vendor/prismic.io-1.0.8.min.js"></script>
         <script src="js/prismic-configuration.js"></script>
         <script src="js/prismic-helpers.js"></script>
         <script src="js/prismic-templates.js"></script>
@@ -92,7 +92,9 @@
 
                 Helpers.withPrismic(function(ctx) {
 
-                    ctx.api.form("everything").ref(ctx.ref).submit(function(docs) {
+                    ctx.api.form("everything").ref(ctx.ref).submit(function(err, docs) {
+
+                        if (err) { Configuration.onPrismicError(err); return; }
 
                         // Feed the templates
                         $('header, form, #title, #list, footer').render({

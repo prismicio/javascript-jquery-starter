@@ -24,7 +24,8 @@
 
         buildContext: function(ref, callback) {
           // retrieve the API
-          global.Helpers.getApiHome(function(api) {
+          global.Helpers.getApiHome(function(err, api) {
+            if (err) { Configuration.onPrismicError(err); return; }
             var ctx = {
               ref: (ref || api.data.master.ref),
               api: api,

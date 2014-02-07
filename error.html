@@ -9,17 +9,19 @@
         <script src="js/prismic-helpers.js"></script>
         <script src="js/prismic-templates.js"></script>
     </head>
-    <body class="loading">
+    <body>
 
-        <!-- Logic -->
+        <h1>An error happened on the server side</h1>
+
+        <p>
+            <a href="index.html">Back to home</a>
+        </p>
 
         <script type="text/javascript">
-            $(function() {
-
-                // Clear the session
-                sessionStorage.clear();
-                document.location = 'index.html';
-
+            $(function(){
+                if (window.location.hash && window.location.hash.length>1) {
+                    $('h1').html("An error happened on the server side: "+window.location.hash.substring(1));
+                }
             });
         </script>
 
