@@ -38,7 +38,7 @@
         };
     })();
 
-    $.fn.render = function(ctx) {
+    $.fn.render = function(ctx, callback) {
         $(this).each(function() {
             var source = $(this).find('script[type="text/template"]').html(),
                 template = source ? tmpl(source) : undefined;
@@ -46,6 +46,9 @@
                 $(this).html(template(ctx));
             }
         });
+        if(callback){
+            callback();
+        }
     }
 
 }(jQuery));
