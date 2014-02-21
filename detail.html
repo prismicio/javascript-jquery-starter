@@ -4,7 +4,7 @@
     <head>
         <title>Your prismic.io project</title>
         <script src="js/vendor/jquery-2.0.3.min.js"></script>
-        <script src="js/vendor/prismic.io-1.0.8.min.js"></script>
+        <script src="js/vendor/prismic.io-1.0.9.min.js"></script>
         <script src="js/prismic-configuration.js"></script>
         <script src="js/prismic-helpers.js"></script>
         <script src="js/prismic-templates.js"></script>
@@ -48,7 +48,7 @@
 
                         if (err) { Configuration.onPrismicError(err); return; }
 
-                        var doc = docs[0];
+                        var doc = docs.results[0];
 
                         // If there is no documents for this id
                         if(!doc) {

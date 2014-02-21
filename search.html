@@ -4,7 +4,7 @@
     <head>
         <title>Your prismic.io project</title>
         <script src="js/vendor/jquery-2.0.3.min.js"></script>
-        <script src="js/vendor/prismic.io-1.0.8.min.js"></script>
+        <script src="js/vendor/prismic.io-1.0.9.min.js"></script>
         <script src="js/prismic-configuration.js"></script>
         <script src="js/prismic-helpers.js"></script>
         <script src="js/prismic-templates.js"></script>
@@ -21,8 +21,8 @@
 
         <h2 id="title">
             <script type="text/template">
-                <% if(docs.length > 0) { %>
-                    <%= docs.length %> documents
+                <% if(docs.results.length > 0) { %>
+                    <%= docs.results.length %> documents
                 <% } else { %>
                     No results found
                 <% } %>
@@ -31,10 +31,10 @@
 
         <ul id="results">
             <script type="text/template">
-                <% for(var i=0; i<docs.length; i++) { %>
+                <% for(var i=0; i<docs.results.length; i++) { %>
                     <li>
-                        <a href="<%= ctx.linkResolver(ctx, docs[i]) %>">
-                            <%= docs[i].slug %>
+                        <a href="<%= ctx.linkResolver(ctx, docs.results[i]) %>">
+                            <%= docs.results[i].slug %>
                         </a>
                     </li>
                 <% } %>
