@@ -84,7 +84,7 @@
                     <ul>
                         <% if (docs.page != 1) { %>
                             <li>
-                                <a href="/#<%= docs.page - 1 %>" data-forcereload="true">previous page</a>
+                                <a href="#<%= docs.page - 1 %>" data-forcereload="true">previous page</a>
                             </li>
                         <% } %>
                         <% for (var i = 1; i <= docs.total_pages; i++) { %>
@@ -92,13 +92,13 @@
                                 <% if (docs.page == i) { %>
                                     <span><%= i %></span>
                                 <% } else { %>
-                                    <a href="/#<%= i %>" data-forcereload="true"><%= i %></a>
+                                    <a href="#<%= i %>" data-forcereload="true"><%= i %></a>
                                 <% } %>
                             </li>
                         <% } %>
                         <% if (docs.page != docs.total_pages) { %>
                             <li>
-                                <a href="/#<%= docs.page + 1 %>" data-forcereload="true">next page</a>
+                                <a href="#<%= docs.page + 1 %>" data-forcereload="true">next page</a>
                             </li>
                         <% } %>
                     </ul>

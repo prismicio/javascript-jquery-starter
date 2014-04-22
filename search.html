@@ -21,8 +21,8 @@
 
         <h2 id="title">
             <script type="text/template">
-                <% if(docs.results.length > 0) { %>
-                    <%= docs.results.length %> documents
+                <% if(docs.total_results_size > 0) { %>
+                    <%= docs.total_results_size %> documents
                 <% } else { %>
                     No results found
                 <% } %>
@@ -40,6 +40,35 @@
                 <% } %>
             </script>
         </ul>
+
+        <div id="pagination">
+            <script type="text/template">
+                <% if(docs.total_pages > 1) { %>
+                    <hr>
+                    <ul>
+                        <% if (docs.page != 1) { %>
+                            <li>
+                                <a href="#<%= docs.page - 1 %>" data-forcereload="true">previous page</a>
+                            </li>
+                        <% } %>
+                        <% for (var i = 1; i <= docs.total_pages; i++) { %>
+                            <li>
+                                <% if (docs.page == i) { %>
+                                    <span><%= i %></span>
+                                <% } else { %>
+                                    <a href="#<%= i %>" data-forcereload="true"><%= i %></a>
+                                <% } %>
+                            </li>
+                        <% } %>
+                        <% if (docs.page != docs.total_pages) { %>
+                            <li>
+                                <a href="#<%= docs.page + 1 %>" data-forcereload="true">next page</a>
+                            </li>
+                        <% } %>
+                    </ul>
+                <% } %>
+            </script>
+        </div>
 
         <footer>
             <script type="text/template">
@@ -59,14 +88,21 @@
                     // Retrieve the query
                     var q = Helpers.queryString['q'];
 
-                    ctx.api.form("everything").ref(ctx.ref).query('[[:d = fulltext(document, "' + q + '")]]').submit(function(err, docs) {
+                    ctx.api.form("everything").set('page', parseInt(window.location.hash.substring(1)) || 1 ).ref(ctx.ref).query('[[:d = fulltext(document, "' + q + '")]]').submit(function(err, docs) {
 
                         if (err) { Configuration.onPrismicError(err); return; }
 
                         // Feed the templates
-                        $('header, #results, footer').render({
+                        $('header, #title, #results, #pagination, footer').render({
                             docs: docs,
                             ctx: ctx
+                        },
+                        // Useful for pagination: refresh on some links even when only anchor changed
+                        function() {
+                            $('[data-forcereload=true]').click(function(e){
+                                window.location = $(this).attr('href');
+                                window.location.reload();
+                            });
                         });
 
                     });
