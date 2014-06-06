@@ -76,13 +76,17 @@ There are several places in this project where you'll be able to find helpful he
    * also, some URL parsing helpers: `queryString` and `encodedHash`.
  * in `js/prismic-template.js`:
    * a very basic templating system based on [John Resig's micro-templating](http://ejohn.org/blog/javascript-micro-templating/) and JQuery, so that you can simply call `$(#your-element-id).render(vars, callback)`
+   
+You can see the typical architecture of an HTML page if you look at [the index.html file](https://github.com/prismicio/javascript-jquery-starter/blob/master/index.html):
 
-To get started with a new HTML file you wish to insert manageable content in, get inspired by the `detail.html`, `index.html`, `search.html` files:
- * insert your template where you want them to be in the page, framed by `<script type="text/template">` tags;
- * put your logic/controller at the end of the page, starting with `Helpers.withPrismic` to make sure your `ctx` is properly prepared for you;
- * in the callback of `Helpers.withPrismic`, perform your API calls, one after the other, each one inside the previous one's callback (if you feel this is not as clean as could be, you can learn about [promises](http://www.html5rocks.com/en/tutorials/es6/promises/) and the [Q](https://github.com/kriskowal/q) library), and make sure to properly deal with errors;
- * in the last callback, render the page, by calling `render` on DOM elements that contain your templates.
-
+ * **Scripts**: including them at the top of the page (note that you can also include them at the bottom)
+ * **Content release selectbox**: only appears when the user is logged in, and allows to select a future content release to preview
+ * **View**: with the bits of template to trigger
+ * **Controller** at the bottom: does the queries, and triggers the rendering of templates:
+   * start with `Helpers.withPrismic` to make sure your `ctx` is properly prepared for you;
+   * in the callback of `Helpers.withPrismic`, perform your API calls, one after the other, each one inside the previous one's callback (if you feel this is not as clean as could be, you can learn about [promises](http://www.html5rocks.com/en/tutorials/es6/promises/) and the [Q](https://github.com/kriskowal/q) library), and make sure to properly deal with errors;
+   * in the last callback, render the page, by calling `render` on DOM elements that contain your templates.
+ 
 ### Contribute to the starter project
 
 Contribution is open to all developer levels, read our "[Contribute to the official kits](https://developers.prismic.io/documentation/UszOeAEAANUlwFpp/contribute-to-the-official-kits)" documentation to learn more.
