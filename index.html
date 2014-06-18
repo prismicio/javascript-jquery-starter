@@ -3,8 +3,10 @@
 <html>
     <head>
         <title>Your prismic.io project</title>
+
+        <!-- Scripts -->
         <script src="js/vendor/jquery-2.0.3.min.js"></script>
-        <script src="js/vendor/prismic.io-1.0.9.min.js"></script>
+        <script src="js/vendor/prismic.io-1.0.10.min.js"></script>
         <script src="js/prismic-configuration.js"></script>
         <script src="js/prismic-helpers.js"></script>
         <script src="js/prismic-templates.js"></script>
@@ -12,6 +14,9 @@
     <body>
 
         <header>
+
+            <!-- Content release selectbox (only appears if the user is logged in) -->
+            
             <script type="text/template">
                 <% if(ctx.oauth().hasPrivilegedAccess) { %>
                     <div id="toolbar">
@@ -38,12 +43,16 @@
 
                     </div>
                 <% } %>
-
-                <a href="index.html?<%= ctx.maybeRefParam %>">
-                    <h1>Your prismic.io project</h1>
-                </a>
             </script>
         </header>
+
+        <!-- View: bits of templates that are triggered in the controller (at the bottom) -->
+
+        <h1 id="title">
+            <a href="index.html?<%= ctx.maybeRefParam %>">
+                Your prismic.io project
+            </a>
+        </h1>
 
         <form action="search.html" method="GET">
             <script type="text/template">
@@ -55,7 +64,7 @@
 
         <hr>
 
-        <h2 id="title">
+        <h2 id="subtitle">
             <script type="text/template">
                 <% if(docs.total_results_size > 0) { %>
                     <%= docs.total_results_size %> documents
@@ -114,7 +123,7 @@
             </script>
         </footer>
 
-        <!-- Logic -->
+        <!-- Controller (logic) -->
 
         <script type="text/javascript">
             $(function() {
@@ -126,7 +135,7 @@
                         if (err) { Configuration.onPrismicError(err); return; }
 
                         // Feed the templates
-                        $('header, form, #title, #list, #pagination, footer').render(
+                        $('header, form, #title, #subtitle, #list, #pagination, footer').render(
                             {
                                 docs: docs,
                                 ctx: ctx

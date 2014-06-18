@@ -61,6 +61,32 @@ You can find out [how to get started with prismic.io](https://developers.prismic
 
 You'll find more information about how to use the development kit included in this starter project, by reading [its README file](https://github.com/prismicio/javascript-kit/blob/master/README.md).
 
+### Specifics and helpers of the JQuery starter project
+
+There are several places in this project where you'll be able to find helpful helpers of many kinds. You may want to learn about them in order to know your starter project better, or to take those that you think might be useful to you in order to integrate prismic.io in an existing app.
+
+ * in `js/prismic-configuration.js`:
+   * this is where you set you API endpoint and security to access your repository's API;
+   * you will also find the linkResolver closure that gets passed around to resolve your links (read more in the last paragraph of our [API documentation](https://developers.prismic.io/documentation/UjBe8bGIJ3EKtgBZ/api-documentation));
+   * you will also find the closure that gets executed when the API returns an error.
+ * in `js/prismic-helpers.js`:
+   * a `getApiHome` function that creates the `Api` object using the configuration in the `prismic-configuration.js` file;
+   * a `buildContext` function that creates the `ctx` object that will be passed around (containing the `Api` object, the ref, the `linkResolver` closure, etc.
+   * a `withPrismic` function that we'll start every "controller" with, so that the rest of it (that we'll write in the callback) can directly use `ctx`, and therefore the properly prepared `Api` object, and everything that is necessary to get stuff done.
+   * also, some URL parsing helpers: `queryString` and `encodedHash`.
+ * in `js/prismic-template.js`:
+   * a very basic templating system based on [John Resig's micro-templating](http://ejohn.org/blog/javascript-micro-templating/) and JQuery, so that you can simply call `$(#your-element-id).render(vars, callback)`
+   
+You can see the typical architecture of an HTML page if you look at [the index.html file](https://github.com/prismicio/javascript-jquery-starter/blob/master/index.html):
+
+ * **Scripts**: including them at the top of the page (note that you can also include them at the bottom)
+ * **Content release selectbox**: only appears when the user is logged in, and allows to select a future content release to preview
+ * **View**: with the bits of template to trigger
+ * **Controller** at the bottom: does the queries, and triggers the rendering of templates:
+   * start with `Helpers.withPrismic` to make sure your `ctx` is properly prepared for you;
+   * in the callback of `Helpers.withPrismic`, perform your API calls, one after the other, each one inside the previous one's callback (if you feel this is not as clean as could be, you can learn about [promises](http://www.html5rocks.com/en/tutorials/es6/promises/) and the [Q](https://github.com/kriskowal/q) library), and make sure to properly deal with errors;
+   * in the last callback, render the page, by calling `render` on DOM elements that contain your templates.
+ 
 ### Contribute to the starter project
 
 Contribution is open to all developer levels, read our "[Contribute to the official kits](https://developers.prismic.io/documentation/UszOeAEAANUlwFpp/contribute-to-the-official-kits)" documentation to learn more.
