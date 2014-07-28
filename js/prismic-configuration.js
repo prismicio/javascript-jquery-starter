@@ -1,13 +1,10 @@
 var Configuration = {
 
   // -- API endpoint
-  apiEndpoint: 'https://srenault.prismic.io/api',
-
-  // -- Access token if the Master is not open
-  // accessToken: 'xxxxxx',
+  apiEndpoint: 'https://lesbonneschoses.prismic.io/api',
 
   // -- OAuth
-  clientId: 'U9YR2TQAADQAcZsA',
+  //clientId: 'U9YR2TQAADQAcZsA',
 
   // -- Links resolution rules
   linkResolver: function(ctx, doc) {
