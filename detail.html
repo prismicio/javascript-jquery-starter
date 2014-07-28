@@ -25,6 +25,24 @@
             </script>
         </article>
 
+        <aside>
+            <script type="text/template">
+                <% if(doc.linkedDocuments.length > 0) { %>
+                    <hr>
+                    <h2>Linked documents:</h2>
+                    <ul>
+                        <% for(var i=0; i<doc.linkedDocuments.length; i++) { %>
+                            <li>
+                                <a href="detail.html?id=<%= doc.linkedDocuments[i].id %>&slug=<%= doc.linkedDocuments[i].slug %>">
+                                    <%= doc.linkedDocuments[i].slug %>
+                                </a>
+                            </li>
+                        <% } %>
+                    </ul>
+                <% } %>
+            </script>
+        </aside>
+
         <footer>
             <script type="text/template">
                 <% if(!ctx.oauth().hasPrivilegedAccess) { %>
@@ -66,7 +84,7 @@
                         }
 
                         // Feed the templates
-                        $('header, article, footer').render({
+                        $('header, article, aside, footer').render({
                             doc: doc,
                             ctx: ctx
                         });
