@@ -49,9 +49,11 @@
         <!-- View: bits of templates that are triggered in the controller (at the bottom) -->
 
         <h1 id="title">
-            <a href="index.html?<%= ctx.maybeRefParam %>">
-                Your prismic.io project
-            </a>
+            <script type="text/template">
+                <a href="index.html?<%= ctx.maybeRefParam %>">
+                    Your prismic.io project
+                </a>
+            </script>
         </h1>
 
         <form action="search.html" method="GET">
@@ -65,7 +67,7 @@
         <hr>
 
         <h2 id="subtitle">
-            <script type="text/template">
+          <script type="text/template">
                 <% if(docs.total_results_size > 0) { %>
                     <%= docs.total_results_size %> documents
                 <% } else { %>

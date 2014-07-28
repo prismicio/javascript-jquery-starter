@@ -24,14 +24,15 @@
 
         buildContext: function(ref, callback) {
           // retrieve the API
-          global.Helpers.getApiHome(function(err, api) {
-            if (err) { Configuration.onPrismicError(err); return; }
+          global.Helpers.getApiHome(function(err, api, xhr) {
+            console.log(err);
+            if (err) { Configuration.onPrismicError(err, xhr); return; }
             var ctx = {
               ref: (ref || api.data.master.ref),
               api: api,
               maybeRef: (ref && ref != api.data.master.ref ? ref : ''),
               maybeRefParam: (ref && ref != api.data.master.ref ? '&ref=' + ref : ''),
-              
+
               oauth: function() {
                 var token = sessionStorage.getItem('ACCESS_TOKEN');
                 return {
@@ -45,6 +46,17 @@
               }
             }
             callback(ctx);
+          });
+        },
+
+        getOauthInitiate: function(callback) {
+          global.Helpers.getApiHome(function(err, api, xhr) {
+              if(err) {
+                  var response = JSON.parse(xhr.responseText);
+                  callback && callback(null, response.oauth_initiate);
+              } else {
+                  callback && callback(null, api.data.oauthInitiate);
+              }
           });
         },
 

@@ -24,11 +24,11 @@
                 } else {
 
                     // Retrieve the prismic API
-                    Helpers.getApiHome(
-                        function(err, api) {
+                    Helpers.getOauthInitiate(
+                        function(err, url) {
                             if (err) { Configuration.onPrismicError(err); return; }
                             document.location =
-                                api.data.oauthInitiate + 
+                                url +
                                 '?response_type=token' +
                                 '&client_id=' + encodeURIComponent(Configuration['clientId']) +
                                 '&redirect_uri=' + encodeURIComponent(document.location) +
