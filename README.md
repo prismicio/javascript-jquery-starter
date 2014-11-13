@@ -18,13 +18,13 @@ Your JQuery starter project is now working! However, by default, it will list an
 
 ### Configure the starter project
 
-Edit the `script/prismic-configuration.js` file to make the application point to the correct repository:
+Edit the `js/prismic-configuration.js` file to make the application point to the correct repository:
 
 ```
 var Configuration = {
 
   // -- API endpoint
-  apiEndpoint: 'https://lesbonneschoses.prismic.io/api'
+  apiEndpoint: 'https://lesbonneschoses.prismic.io/api',
 
   // -- Access token if the Master is not open
   // accessToken: 'xxxxxx',
