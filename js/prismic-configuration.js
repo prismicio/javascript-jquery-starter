@@ -1,7 +1,7 @@
 var Configuration = {
 
   // -- API endpoint
-  apiEndpoint: 'https://lesbonneschoses-u01zoaeaac8a4unn.prismic.io/api',
+  apiEndpoint: 'https://lesbonneschoses.prismic.io/api',
 
   // -- OAuth
   //clientId: 'U9YR2TQAADQAcZsA',
