@@ -5,8 +5,8 @@
         <title>Your prismic.io project</title>
 
         <!-- Scripts -->
-        <script src="js/vendor/jquery-2.0.3.min.js"></script>
-        <script src="js/vendor/prismic.io-1.0.21.min.js"></script>
+        <script src="js/vendor/jquery-2.1.1.min.js"></script>
+        <script src="js/vendor/prismic.io-1.0.25.min.js"></script>
         <script src="js/prismic-configuration.js"></script>
         <script src="js/prismic-helpers.js"></script>
         <script src="js/prismic-templates.js"></script>
@@ -125,6 +125,28 @@
             </script>
         </footer>
 
+        <!-- your google analytics tracker here -->
+
+        <!-- <script> -->
+        <!--   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){ -->
+        <!--   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), -->
+        <!--   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m) -->
+        <!--   })(window,document,'script','//www.google-analytics.com/analytics.js','ga'); -->
+
+        <!--   ga('create', '', 'auto'); -->
+        <!--   ga('send', 'pageview'); -->
+        <!-- </script> -->
+
+        <script src="//static.cdn.prismic.io/prismic.js"></script>
+
+        <div id="experiment">
+          <script type="text/template">
+            <% if(ctx.api.experiments.current()) { %>
+              <script>Helpers.loadExperimentJs("<%= ctx.api.experiments.currentGoogleId() %>");<%= closeScript %>
+            <% } %>
+          </script>
+        </div>
+
         <!-- Controller (logic) -->
 
         <script type="text/javascript">
@@ -137,10 +159,11 @@
                         if (err) { Configuration.onPrismicError(err); return; }
 
                         // Feed the templates
-                        $('header, form, #title, #subtitle, #list, #pagination, footer').render(
+                        $('header, form, #title, #subtitle, #list, #pagination, footer, #experiment').render(
                             {
                                 docs: docs,
-                                ctx: ctx
+                                ctx: ctx,
+                                closeScript: '</sc' + 'ript>'
                             },
                             // Useful for pagination: refresh on some links even when only anchor changed
                             function() {
