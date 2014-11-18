@@ -19,7 +19,7 @@
     global.Helpers = {
 
         getApiHome: function(callback) {
-            Prismic.Api(Configuration.apiEndpoint, callback);
+            Prismic.Api(Configuration.apiEndpoint, callback, Configuration.accessToken);
         },
 
         buildContext: function(ref, callback) {
