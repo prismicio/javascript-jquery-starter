@@ -13,38 +13,6 @@
     </head>
     <body>
 
-        <header>
-
-            <!-- Content release selectbox (only appears if the user is logged in) -->
-            
-            <script type="text/template">
-                <% if(ctx.oauth().hasPrivilegedAccess) { %>
-                    <div id="toolbar">
-
-                        <form method="GET">
-                            <label for="releaseSelector">See this website: </label>
-                            <select id="releaseSelector" name="ref" onchange="this.form.submit()">
-                                <option value="" <% if(ctx.ref == ctx.api.data.master.ref) { %> selected="selected" <% } %> >As currently seen by guest visitors</option>
-                                <optgroup label="Or preview the website in a future release:">
-                                <% for(var i=0; i<ctx.api.data.refs.length; i++) { %>
-                                    <% if(!ctx.api.data.refs[i].isMaster) { %>
-                                        <option value="<%= ctx.api.data.refs[i].ref %>" <% if(ctx.ref == ctx.api.data.refs[i].ref) { %> selected="selected" <% } %>>As <%= ctx.api.data.refs[i].label %></option>
-                                    <% } %>
-                                <% } %>
-                                </optgroup>
-                            </select>
-                        </form>
-
-                        <form action="signout.html" method="GET">
-                            <input type="submit" value="Disconnect">
-                        </form>
-
-                        <hr>
-
-                    </div>
-                <% } %>
-            </script>
-        </header>
 
         <!-- View: bits of templates that are triggered in the controller (at the bottom) -->
 
@@ -116,14 +84,6 @@
                 <% } %>
             </script>
         </div>
-
-        <footer>
-            <script type="text/template">
-                <% if(!ctx.oauth().hasPrivilegedAccess) { %>
-                    <hr><a href="signin.html">Sign in to preview changes</a>
-                <% } %>
-            </script>
-        </footer>
 
         <!-- your google analytics tracker here -->
 

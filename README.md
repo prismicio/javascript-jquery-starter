@@ -27,16 +27,10 @@ var Configuration = {
   apiEndpoint: 'https://lesbonneschoses.prismic.io/api',
 
   // -- Access token if the Master is not open
-  // accessToken: 'xxxxxx',
-
-  // -- OAuth
-  // clientId: 'xxxxxx',
-  // clientSecret: 'xxxxxx'
+  // accessToken: 'xxxxxx'
   
 }
 ```
-
-To set up the OAuth configuration and interactive signin, go to the _Applications_ panel in your repository's settings, and create a new OAuth application. You simply have to fill in an application name and potentially the callback URL (`localhost` URLs are always authorized, so at development time you can omit to fill in the Callback URL field). After submitting, copy/paste the `clientId` & `clientSecret` tokens into the proper place in your configuration.
 
 ### Publish your project
 
